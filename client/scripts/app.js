@@ -21,6 +21,9 @@ var App = {
 
     // TODO: Make sure the app loads data from the API
     // continually, instead of just once at the start.
+
+    //setInterval(App.fetch, 3000);
+
   },
 
   fetch: function(callback = ()=>{}) {
@@ -29,6 +32,11 @@ var App = {
       console.log(data);
 
       // TODO: Use the data to update Messages and Rooms
+
+      // Update Messages Data (array of message objects)
+      Messages.add(data);
+      // If new rooms are found, add to rooms list?
+
       // and re-render the corresponding views.
     });
   },
