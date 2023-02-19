@@ -14,14 +14,18 @@ var Rooms = {
 
   add: function(roomname) {
     if (!roomname) {
-      return;  
+      return;
     }
 
     Rooms._data.add(roomname);
   },
 
   select: function(roomname) {
-    Rooms.currentRoom = roomname;
+    Rooms._currentRoom = roomname;
+  },
+
+  retrieve: function() {
+    return Array.from(Rooms._data);
   }
 };
 

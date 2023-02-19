@@ -5,51 +5,47 @@
 var Messages = {
 
   // TODO: Define how you want to store your messages.
-  _data: new Map(),
-
-  // NOTE!!! NX 2/18/23: I got it wrong. It should be a object wrapping maps {Map(), Map(), Map()}, not the other way around!! This is because we need the messages to be ordered, but the rooms don't have to be. I'm adding some lines in for how that would change the code, but left them all commented out.
-
-  // _data: {},
+ 
+  _data: {},
 
   // TODO: Define methods which allow you to retrieve from,
   // add to, and generally interact with the messages.
 
   // input ALL data from server and then sort into Map container
-  // input is an Array of Objects: [{},{},{}]
+  // input is an Array of Objects: [{},{},{}] 
   // input.message_id -> key in our Map container
 
   add: function(inputData) {
     inputData.forEach(function(message) {
-
-      // if the room is not in our data yet, we need to load an empty object in before storing data in
-      if (!Messages._data.has(message.roomname)) {
-        Messages._data.set(message.roomname, {});
+      // if the room is not in our data yet, we need to load an new Map() in before storing data in
+      if (!(message.roomname in Messages._data)) {
+        Messages._data[message.roomname] = new Map();
+        Rooms.add(message.roomname);
       }
 
-      // if the room is not in our data yet, we need to load an new Map() in before storing data in
-      // if (!(message.roomname in Messages._data)) {
-      //   Messages._data[message.roomname] = new Map();
+      // if the message is NOT already in our data then we want to add it in
+      if (!(Messages._data[message.roomname].has(message.message_id))) {
+        // update data directly
+        Messages._data[message.roomname].set(message.message_id, message);
+      }
+
+      // // if the room is not in our data yet, we need to load an empty object in before storing data in
+      // if (!Messages._data.has(message.roomname)) {
+      //   Messages._data.set(message.roomname, {});
       // }
 
-      // pull data from data storage to reference
-      // let roomMessagesObj= Messages._data.get(message.roomname);
-
-      if the message is NOT already in our data then we want to add it in
-      if (!(message.message_id in roomMessagesObj)) {
-      // if (!(Messages._data[message.roomname]
-      // .has(message.message_id))) {
-
-        // update pulled data
-        roomMessagesObj[message.message_id] = message;
-        // push the data back into data storage
-        Messages._data.set(message.roomname, roomMessagesObj);
-
-        // update data directly
-        // Messages._data[message.roomname].set(message.message_id, message);
-      }
+      // // pull data from data storage to reference
+      // let roomMessagesObj = Messages._data.get(message.roomname);
+      // // if the message is NOT already in our data then we want to add it in
+      // if (!(message.message_id in roomMessagesObj)) {
+      //   // update pulled data
+      //   roomMessagesObj[message.message_id] = message;
+      //   // push the data back into data storage
+      //   Messages._data.set(message.roomname, roomMessagesObj);
     });
 
     console.log(Messages._data);
+
   },
     // NOTES on add
       // _data = {}
@@ -65,7 +61,10 @@ var Messages = {
 
       // C: ^^
 
-  retrieve: function(roomSelected) {}, // pulls data from client
+  retrieve: function() {
+    return Array.from(Messages._data[Rooms._currentRoom].values());
+    //return Messages._data;
+  }, // pulls data from client
 
   // retrieve/sort by room
   // If blank, default room or pull everything
